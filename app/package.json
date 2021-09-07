@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "webpack-dev-server --mode=development --open --hot",
-    "build": "webpack --mode=production"
+    "build": "yarn && webpack --mode=production"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.6.1",
