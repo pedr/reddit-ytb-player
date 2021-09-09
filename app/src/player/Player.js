@@ -4,7 +4,7 @@ import YouTube from "react-youtube";
 import { useSelector, useDispatch  } from 'react-redux'
 
 import { getValidPosts, getRedditNewest, getRedditRandom } from '../helpers';
-import { loadTracks, replaceTracks, next, previous, play, } from './playerSlice'
+import { loadTracks, next, finishedLoadingContent, previous, play, } from './playerSlice'
 
 const Player = () => {
 //  const [state, dispatch] = useReducer(playerReducer, initialState)
@@ -13,6 +13,7 @@ const Player = () => {
   const tracks = useSelector(state => state.player.tracks)
   const trackSelected = useSelector(state => state.player.trackSelected)
   const videoId = useSelector(state => state.player.videoId)
+  const shouldFetchMoreContent = useSelector(state => state.player.shouldFetchMoreContent)
   const dispatch = useDispatch()
   
   const getNewest = async () => {
@@ -31,7 +32,7 @@ const Player = () => {
 
     const validPosts = getValidPosts(posts);
 
-    dispatch(replaceTracks(validPosts))
+    dispatch(loadTracks(validPosts))
 
   };
 
@@ -66,12 +67,22 @@ const Player = () => {
 
     }
 
-    dispatch(replaceTracks(validPosts));
+    dispatch(loadTracks(validPosts));
   };
 
   const onPlay = () => {
     dispatch(play())
   }
+
+  useEffect(() => {
+    const getMoreContent = async () => {
+      if (shouldFetchMoreContent) {
+        await getRandom()
+        dispatch(finishedLoadingContent())
+      }
+    }
+    getMoreContent();
+  }, [shouldFetchMoreContent]);
 
   useEffect(() => {
     getRandom()

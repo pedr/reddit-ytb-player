@@ -13,6 +13,7 @@ const initialState = {
   trackSelected: 0,
   videoId: '',
   tracks: [],
+  shouldFetchMoreContent: false,
 }
 
 export const playerSlice = createSlice({ 
@@ -28,15 +29,24 @@ export const playerSlice = createSlice({
       state.pause = !state.pause
     },
     next: (state) => {
-      let val = 0;
+      let numberTrack = 0;
       if (state.trackSelected + 1 == state.tracks.length) {
-        val = 0;
+        numberTrack = 0;
       } else {
-        val = state.trackSelected + 1;
+        numberTrack = state.trackSelected + 1;
       }
 
-      state.trackSelected = val;
-      state.videoId = state.tracks[val].videoId;
+      let shouldFetchMoreContent = false;
+      if (state.trackSelected + 2 >= state.tracks.length) {
+        shouldFetchMoreContent = true;
+      }
+
+      state.trackSelected = numberTrack;
+      state.videoId = state.tracks[numberTrack].videoId;
+      state.shouldFetchMoreContent = shouldFetchMoreContent;
+    },
+    finishedLoadingContent: (state) => {
+      state.shouldFetchMoreContent = false;
     },
     previous: (state) => {
       let val = 0;
@@ -51,15 +61,18 @@ export const playerSlice = createSlice({
     },
     loadTracks: (state, action) => {
       let videoId = null;
+      let trackSelected = 0;
 
       if (state.videoId === '') {
-        videoId = action.payload[0].videoId
+        videoId = action.payload[trackSelected].videoId
       } else {
         videoId = state.videoId
+        trackSelected = state.trackSelected;
       }
 
       state.tracks = [...state.tracks, ...action.payload];
       state.videoId = videoId;
+      state.trackSelected = state.trackSelected;
     },
     replaceTracks: (state, action) => {
       let videoId = action.payload[0].videoId
@@ -70,5 +83,5 @@ export const playerSlice = createSlice({
   },
 })
 
-export const { play, pause, next, previous, loadTracks, replaceTracks } = playerSlice.actions;
+export const { play, pause, next, finishedLoadingContent, previous, loadTracks, replaceTracks } = playerSlice.actions;
 export default playerSlice.reducer
