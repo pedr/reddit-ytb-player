@@ -4,7 +4,7 @@ import YouTube from "react-youtube";
 import { useSelector, useDispatch  } from 'react-redux'
 
 import { getValidPosts, getRedditNewest, getRedditRandom } from '../helpers';
-import { loadTracks, next, finishedLoadingContent, previous, play, } from './playerSlice'
+import { loadTracks, next, finishedLoadingContent, previous, play, selectTrack } from './playerSlice'
 
 const Player = () => {
 //  const [state, dispatch] = useReducer(playerReducer, initialState)
@@ -74,6 +74,10 @@ const Player = () => {
     dispatch(play())
   }
 
+  const onClickToSelectTrack = (track) => {
+    dispatch(selectTrack({ videoId: track.videoId }))
+  }
+
   useEffect(() => {
     const getMoreContent = async () => {
       if (shouldFetchMoreContent) {
@@ -96,9 +100,9 @@ const Player = () => {
         color: '#FFFFFF',
         height: '100%'
       }}>
-        <h3>Choose a subreddit:</h3>
+        <h4>Choose a subreddit:</h4>
         <div style={{ marginBottom: '1em' }}>
-          <label for="subName">subreddit name r/</label>
+          <label className="me-1" for="subName">r/ </label>
           <input
             type="text"
             id="subName"
@@ -106,11 +110,13 @@ const Player = () => {
             value={subName}
             onChange={e => setSubName(e.target.value)}
           />
-          <button onClick={getNewest}>Get newest videos from sub</button>
-          <button onClick={getRandom}>Get random videos from sub</button>
+          <div className="mt-2">
+            <button className="btn btn-secondary me-1" onClick={getNewest}>Newest</button>
+            <button className="btn btn-secondary" onClick={getRandom}>Random</button>
+          </div>
         </div>
         { videoId && videoId.length > 0 && 
-          <div style={{maxWidth: '660px'}}>
+          <div style={{maxWidth: '660px'}} className="mt-3">
             <YouTube
               videoId={videoId}
               opts={{
@@ -125,23 +131,35 @@ const Player = () => {
           </div>
         }
         <div style={{ marginBottom: '1em' }} >
-          <button onClick={goBack}>Previous</button>
-          <button onClick={goNext}>Next</button>
+          <button className="btn btn-secondary me-1" onClick={goBack}>Previous</button>
+          <button className="btn btn-secondary me-1" onClick={goNext}>Next</button>
         </div>
-        <div style={{display: 'flex', flexDirection: 'column'}}>
+        <div style={{display: 'flex', flexDirection: 'column', marginTop: "2em"}}>
           {tracks &&
             tracks.map((post, index) => {
               return (
                 <span
                   key={post.id}
                   style={{
-                    padding: '0.5em',
-                    backgroundColor: index === trackSelected ? "#484d5b" : "inherit"
+                    padding: '1em 1em 1em 1.5em',
+                    margin: '-0.5em -1em 0',
+                    backgroundColor: index === trackSelected ? "rgb(83, 174, 98)" : "inherit"
                   }}
+                  className={`d-flex align-items-center justify-content-between ${index === trackSelected ? "text-dark" : "text-light"}`}
                 >
-                  {`${post.title} - score ${post.score} - comments ${post.num_comments} - `}
-                  <a href={`https://reddit.com${post.permalink}`} target="_blank">
-                    Link
+                  <div class="d-flex align-items-center">
+                    <div className={`fs-3 px-1 me-1 d-inline ${index === trackSelected ? "bg-warning rounded-circle" : ""}`}>
+                      <i
+                        onClick={() => onClickToSelectTrack(post)}
+                        className={`bi ${index === trackSelected ? `bi-volume-up text-black` : "bi bi-play-circle"}`}
+                      />
+                    </div>
+                    <span className="me-2">
+                      {`${post.title} - score ${post.score} - comments ${post.num_comments}`}
+                    </span>
+                  </div>
+                  <a className="p-1" href={`https://reddit.com${post.permalink}`} target="_blank">
+                    <i className="bi bi-box-arrow-up-right" />
                   </a>
                 </span>
               );

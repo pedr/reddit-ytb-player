@@ -79,9 +79,17 @@ export const playerSlice = createSlice({
 
       state.tracks = [ ...action.payload];
       state.videoId = videoId;
+    },
+    selectTrack: (state, action) => {
+      const { videoId } = action.payload;
+      const found = state.tracks.find(t => t.videoId === videoId); 
+      if (found) {
+        state.videoId = found.videoId
+        state.trackSelected = state.tracks.findIndex(t => t.videoId === found.videoId)
+      }
     }
   },
 })
 
-export const { play, pause, next, finishedLoadingContent, previous, loadTracks, replaceTracks } = playerSlice.actions;
+export const { play, pause, next, finishedLoadingContent, previous, loadTracks, replaceTracks, selectTrack } = playerSlice.actions;
 export default playerSlice.reducer
