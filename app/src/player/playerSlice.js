@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const modes = {
+const fetchSongsModes = {
   new: "new",
   random: "random",
   hot: "hot",
@@ -8,17 +8,21 @@ const modes = {
 
 const initialState = {
   playing: false,
-  mode: modes.new,
+  fetchSongsMode: fetchSongsModes.random,
   pause: false,
   trackSelected: 0,
   videoId: '',
   tracks: [],
   shouldFetchMoreContent: false,
+  playListSource: {
+    title: '/r/musicanova',
+    code: 'musicanova'
+  }
 }
 
-export const playerSlice = createSlice({ 
-  name: 'player', 
-  initialState, 
+export const playerSlice = createSlice({
+  name: 'player',
+  initialState,
   reducers: {
     play: (state) => {
       state.playing = true;
@@ -77,19 +81,39 @@ export const playerSlice = createSlice({
     replaceTracks: (state, action) => {
       let videoId = action.payload[0].videoId
 
-      state.tracks = [ ...action.payload];
+      state.tracks = [...action.payload];
       state.videoId = videoId;
     },
     selectTrack: (state, action) => {
       const { videoId } = action.payload;
-      const found = state.tracks.find(t => t.videoId === videoId); 
+      const found = state.tracks.find(t => t.videoId === videoId);
       if (found) {
         state.videoId = found.videoId
         state.trackSelected = state.tracks.findIndex(t => t.videoId === found.videoId)
       }
+    },
+    changeMode: (state, action) => {
+      const mode = fetchSongsModes[action.payload]
+      if (mode !== undefined) {
+        state.fetchSongsMode = mode;
+      }
+    },
+    changeSubSelection: (state, action) => {
+      const { title, code } = action.payload
+      if (code == state.playListSource.code) return
+      state.playListSource = {
+        title,
+        code
+      }
+    },
+    cleanTracks: (state) => {
+      state.tracks = [];
+      state.videoId = '';
+      state.trackSelected = 0;
+      state.shouldFetchMoreContent = false;
     }
   },
 })
 
-export const { play, pause, next, finishedLoadingContent, previous, loadTracks, replaceTracks, selectTrack } = playerSlice.actions;
+export const { play, pause, next, finishedLoadingContent, previous, loadTracks, replaceTracks, selectTrack, changeMode, changeSubSelection, cleanTracks } = playerSlice.actions;
 export default playerSlice.reducer

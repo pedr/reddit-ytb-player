@@ -1,0 +1,27 @@
+#player-wrapper {
+  margin: 0;
+  padding: 1em;
+  background-color: #272822;
+  color: #FFFFFF;
+  height: 100%;
+  display: grid;
+  grid-template-areas:
+    'sidemenu videoplaylist'
+    'sidemenu videoplaylist'
+    ;
+  grid-row-gap: 8px;
+  grid-column-gap:  8px;
+  grid-template-columns: minmax(20%, 420px) auto;
+  grid-template-rows: 2fr 1fr;
+}
+
+@media all and (max-width: 920px) { 
+  #player-wrapper {
+    grid-template-areas:
+      'sidemenu'
+      'videoplaylist'
+      ;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+  }
+}

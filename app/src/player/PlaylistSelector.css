@@ -1,0 +1,12 @@
+.playlist-selection-wrapper:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.playlist-selector-mobile {
+  position: absolute;
+  background-color: #424727;
+  padding: 8px;
+  margin-left: -16px;
+  margin-top: 8px;
+}
