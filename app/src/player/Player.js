@@ -67,6 +67,10 @@ const Player = () => {
 
   useEffect(() => {
     const getMoreContent = async () => {
+      if (!playListSource.code) {
+        return false
+      }
+
       if (shouldFetchMoreContent) {
         if (fetchSongsMode == "random") {
           await getRandom()

@@ -26,7 +26,10 @@ const getYoutubeId = (url) => {
 };
 
 const getRedditNewest = (subName) => {
-  const api = `https://www.reddit.com/r/${subName ? subName : 'musicanova'}.json`;
+  if (!subName) {
+    return []
+  }
+  const api = `https://www.reddit.com/r/${subName}.json`;
 
   // @ts-ignore
   return fetch(`${api}`)
@@ -40,7 +43,10 @@ const getRedditNewest = (subName) => {
 };
 
 const getRedditRandom = (subName) => {
-  const api = `https://www.reddit.com/r/${subName ? subName : 'musicanova'}/random.json`;
+  if (!subName) {
+    return []
+  }
+  const api = `https://www.reddit.com/r/${subName}/random.json`;
 
   return fetch(`${api}`)
     .then((res) => res.json())
@@ -56,5 +62,4 @@ export {
   getValidPosts,
   getRedditRandom,
   getRedditNewest
-
 }

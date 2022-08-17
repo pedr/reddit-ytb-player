@@ -47,7 +47,8 @@ const PlaylistSelectorMobile = () => {
 }
 
 const PlaylistSelector = ({ mobile, closeSelection }) => {
-  const [subName, setSubName] = useState('');
+  const subSelected = useSelector(state => state.player.playListSource.code)
+  const [subName, setSubName] = useState(subSelected);
 
   const fetchSongsMode = useSelector(state => state.player.fetchSongsMode)
   const dispatch = useDispatch()
@@ -65,6 +66,15 @@ const PlaylistSelector = ({ mobile, closeSelection }) => {
     }
     dispatch(changeSubSelection({ title: `/r/${subName}`, code: subName }))
   }
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    dispatch(changeSubSelection({ title: `/r/${params.get('sub')}`, code: params.get('sub') }))
+  }, [])
+
+  useEffect(() => {
+    setSubName(subSelected)
+  }, [subSelected])
 
   return <div className={mobile ? "playlist-selector-mobile mt-5" : ""} style={{gridArea: 'sidemenu', zIndex: 9999}}>
     <h4>Choose a subreddit by name, or from the suggestion list:</h4>

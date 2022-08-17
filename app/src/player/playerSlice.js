@@ -15,8 +15,8 @@ const initialState = {
   tracks: [],
   shouldFetchMoreContent: false,
   playListSource: {
-    title: '/r/musicanova',
-    code: 'musicanova'
+    title: '',
+    code: ''
   }
 }
 
