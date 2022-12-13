@@ -6,6 +6,9 @@ import { useSelector, useDispatch  } from 'react-redux'
 
 import { next,previous, play } from './playerSlice'
 import './YoutubePlayer.css'
+const testId = {
+  youtubeComponentWrapper:'youtube-component-wrapper'
+}
 
 const YoutubePlayer = () => {
 
@@ -26,9 +29,10 @@ const YoutubePlayer = () => {
   }
 
   return <div style={{gridArea: 'video'}}>
-    <div className="my-2">Playing <h2 className="text-success d-inline">{playListSource.title}</h2> </div>
+    <div className="my-2">Playing <h2 className="text-success d-inline">{playListSource.title}</h2>
+    </div>
     { videoId && videoId.length > 0 && 
-      <div className="player-wrapper">
+      <div className="player-wrapper" data-testid={testId.youtubeComponentWrapper}>
         <YouTube
           className="react-player"
           videoId={videoId}
@@ -52,3 +56,6 @@ const YoutubePlayer = () => {
 }
 
 export default YoutubePlayer;
+export {
+  testId
+}
