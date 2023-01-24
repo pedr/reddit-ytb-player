@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "webpack-dev-server --mode=development --open --hot",
-    "build": "yarn && webpack --mode=production",
+    "build": "npm install && webpack --mode=production",
     "test": "jest"
   },
   "dependencies": {
