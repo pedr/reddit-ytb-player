@@ -69,7 +69,8 @@ const PlaylistSelector = ({ mobile, closeSelection }) => {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
-    dispatch(changeSubSelection({ title: `/r/${params.get('sub')}`, code: params.get('sub') }))
+    const subredditCode =  params.get('sub') || 'musicanova'
+    dispatch(changeSubSelection({ title: `/r/${subredditCode}`, code: subredditCode }))
   }, [])
 
   useEffect(() => {
