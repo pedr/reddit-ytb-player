@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 
 module.exports = {
+  target: ['web', 'es2020'],
   output: {
     path: path.resolve(__dirname, 'build'),
     filename: 'bundle.js',

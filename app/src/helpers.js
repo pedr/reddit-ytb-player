@@ -58,8 +58,43 @@ const getRedditRandom = (subName) => {
     });
 };
 
+const getRedditTopOfTheWeek = (subName) => {
+  if (!subName) {
+    return []
+  }
+  const api = `https://www.reddit.com/r/${subName}/top.json?t=week`;
+
+  return fetch(`${api}`)
+    .then((res) => res.json())
+    .then((res) => {
+      const {
+        data: { children },
+      } = res;
+      return children;
+    });
+};
+
+const getRedditTopOfTheMonth = (subName) => {
+  if (!subName) {
+    return []
+  }
+  const api = `https://www.reddit.com/r/${subName}/top.json?t=month`;
+
+  return fetch(`${api}`)
+    .then((res) => res.json())
+    .then((res) => {
+      const {
+        data: { children },
+      } = res;
+      return children;
+    });
+};
+
+
 export {
   getValidPosts,
   getRedditRandom,
-  getRedditNewest
+  getRedditNewest,
+  getRedditTopOfTheWeek,
+  getRedditTopOfTheMonth,
 }

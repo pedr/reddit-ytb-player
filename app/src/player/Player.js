@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch  } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
-import { getValidPosts, getRedditNewest, getRedditRandom } from '../helpers';
+import { getValidPosts, getRedditNewest, getRedditTopOfTheWeek, getRedditTopOfTheMonth } from '../helpers';
 import { loadTracks, finishedLoadingContent, cleanTracks } from './playerSlice'
 
 import PlaylistSelector from './PlaylistSelector'
@@ -18,7 +18,7 @@ const Player = () => {
   const fetchSongsMode = useSelector(state => state.player.fetchSongsMode)
   const playListSource = useSelector(state => state.player.playListSource)
   const dispatch = useDispatch()
-  
+
   const getNewest = async () => {
     const response = await getRedditNewest(playListSource.code);
 
@@ -39,13 +39,25 @@ const Player = () => {
 
   };
 
-  const getRandom = async () => {
+  const getTop = async () => {
     let validPosts = [];
-    let tries = 0;
+    const response = await getRedditTopOfTheWeek(playListSource.code);
 
-    while (validPosts.length < 5 && tries < 10) {
-      tries += 1;
-      const response = await getRedditRandom(playListSource.code);
+    const posts = response.map((post) => {
+      return {
+        id: post.data.id,
+        url: post.data.url,
+        title: post.data.title,
+        score: post.data.score,
+        permalink: post.data.permalink,
+        num_comments: post.data.num_comments,
+      };
+    });
+
+    validPosts = [...getValidPosts(posts)];
+
+    if (validPosts.length <= 5) {
+      const response = await getRedditTopOfTheMonth(playListSource.code);
 
       const posts = response.map((post) => {
         return {
@@ -57,9 +69,7 @@ const Player = () => {
           num_comments: post.data.num_comments,
         };
       });
-
-      validPosts = [...validPosts, ...getValidPosts(posts)];
-
+      validPosts = [...getValidPosts(posts)];
     }
 
     dispatch(loadTracks(validPosts));
@@ -72,10 +82,12 @@ const Player = () => {
       }
 
       if (shouldFetchMoreContent) {
-        if (fetchSongsMode == "random") {
-          await getRandom()
+        if (fetchSongsMode == "topOfTheWeek") {
+          await getTop()
         } else if (fetchSongsMode == "new") {
           await getNewest()
+        } else {
+          throw new Error('mode not found: ', fetchSongsMode)
         }
         dispatch(finishedLoadingContent())
       }
@@ -86,8 +98,8 @@ const Player = () => {
   useEffect(() => {
     const getMoreContent = async () => {
       dispatch(cleanTracks())
-      if (fetchSongsMode == "random") {
-        await getRandom()
+      if (fetchSongsMode == "topOfTheWeek") {
+        await getTop()
       } else if (fetchSongsMode == "new") {
         await getNewest()
       }
@@ -97,13 +109,11 @@ const Player = () => {
   }, [playListSource])
 
   return (
-      <div id="player-wrapper">
-        <PlaylistSelector  />
-        <div style={{gridArea: 'videoplaylist'}}>
-          <YoutubePlayer />
-          <Playlist />
-        </div>
-      </div>
+    <div id="player-wrapper" style={{ gridArea: 'videoplaylist' }}>
+      <PlaylistSelector />
+      <YoutubePlayer />
+      <Playlist />
+    </div>
   );
 };
 

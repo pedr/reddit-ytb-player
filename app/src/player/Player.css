@@ -6,22 +6,24 @@
   height: 100%;
   display: grid;
   grid-template-areas:
-    'sidemenu videoplaylist'
-    'sidemenu videoplaylist'
+    'sidemenu video'
+    'sidemenu playlist'
     ;
   grid-row-gap: 8px;
   grid-column-gap:  8px;
   grid-template-columns: minmax(20%, 420px) auto;
-  grid-template-rows: 2fr 1fr;
+  grid-template-rows: auto;
 }
 
-@media all and (max-width: 920px) { 
+@media all and (max-width: 920px) {
   #player-wrapper {
+    max-height: 100vh;
     grid-template-areas:
       'sidemenu'
-      'videoplaylist'
+      'video'
+      'playlist'
       ;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
+    grid-template-rows: auto auto auto;
+    grid-template-columns: 100%;
   }
 }

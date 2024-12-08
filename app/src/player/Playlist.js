@@ -14,7 +14,7 @@ const Playlist = () => {
     dispatch(selectTrack({ videoId: track.videoId }))
   }
 
-  return <div style={{ display: 'flex', flexDirection: 'column', marginTop: "2em", gridArea: 'playlist'}}>
+  return <div style={{ display: 'flex', flexDirection: 'column', marginTop: "1.5em", gridArea: 'playlist', maxHeight: '400px', overflowY: 'scroll'}}>
     {tracks &&
       tracks.map((post, index) => {
         return (

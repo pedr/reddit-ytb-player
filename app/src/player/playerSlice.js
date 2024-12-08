@@ -4,11 +4,12 @@ const fetchSongsModes = {
   new: "new",
   random: "random",
   hot: "hot",
+  topOfTheWeek: "topOfTheWeek",
 };
 
 const initialState = {
   playing: false,
-  fetchSongsMode: fetchSongsModes.random,
+  fetchSongsMode: fetchSongsModes.topOfTheWeek,
   pause: false,
   trackSelected: 0,
   videoId: '',
@@ -68,7 +69,7 @@ export const playerSlice = createSlice({
       let trackSelected = 0;
 
       if (state.videoId === '') {
-        videoId = action.payload[trackSelected].videoId
+        videoId = action.payload[trackSelected]?.videoId ?? ''
       } else {
         videoId = state.videoId
         trackSelected = state.trackSelected;
@@ -99,8 +100,8 @@ export const playerSlice = createSlice({
       }
     },
     changeSubSelection: (state, action) => {
-      const { title, code } = action.payload
-      if (code == state.playListSource.code) return
+      const { title, code, fetchSongsMode } = action.payload
+      state.fetchSongsMode = fetchSongsMode
       state.playListSource = {
         title,
         code

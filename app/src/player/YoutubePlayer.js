@@ -48,7 +48,7 @@ const YoutubePlayer = () => {
         />
       </div>
     }
-    <div style={{ marginBottom: '1em' }} >
+    <div style={{ marginTop: '1em' }} >
       <button className="btn btn-secondary me-1" onClick={goBack}>Previous</button>
       <button className="btn btn-secondary me-1" onClick={goNext}>Next</button>
     </div>

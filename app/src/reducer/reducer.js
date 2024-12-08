@@ -9,6 +9,7 @@ const actionTypes = {
 const modes = {
   new: "new",
   random: "random",
+  topOfTheWeek: "topOfTheWeek",
   hot: "hot",
 };
 

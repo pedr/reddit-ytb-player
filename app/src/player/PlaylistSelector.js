@@ -38,7 +38,7 @@ const PlaylistSelectorMobile = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return <>
-    <button className="btn btn-primary" onClick={() => setIsMenuOpen(val => !val)}>Subreddit selection</button>
+    <button style={{ gridArea: 'sidemenu' }} className="btn btn-primary" onClick={() => setIsMenuOpen(val => !val)}>Subreddit selection</button>
     {
       isMenuOpen &&
       <PlaylistSelector mobile closeSelection={() => setIsMenuOpen(false)} />
@@ -53,24 +53,24 @@ const PlaylistSelector = ({ mobile, closeSelection }) => {
   const fetchSongsMode = useSelector(state => state.player.fetchSongsMode)
   const dispatch = useDispatch()
 
-  const changePlaylist = (title, code) => {
+  const changePlaylist = (title, code, fetchSongsMode) => {
     if (mobile) {
       closeSelection()
     }
-    dispatch(changeSubSelection({ title, code }))
+    dispatch(changeSubSelection({ title, code, fetchSongsMode }))
   }
 
   const updateSubSelectionFromUserInput = () => {
     if (mobile) {
       closeSelection()
     }
-    dispatch(changeSubSelection({ title: `/r/${subName}`, code: subName }))
+    dispatch(changeSubSelection({ title: `/r/${subName}`, code: subName, fetchSongsMode }))
   }
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const subredditCode =  params.get('sub') || 'musicanova'
-    dispatch(changeSubSelection({ title: `/r/${subredditCode}`, code: subredditCode }))
+    dispatch(changeSubSelection({ title: `/r/${subredditCode}`, code: subredditCode, fetchSongsMode }))
   }, [])
 
   useEffect(() => {
@@ -109,18 +109,18 @@ const PlaylistSelector = ({ mobile, closeSelection }) => {
           <input
             className="form-check-input"
             type="radio"
-            onChange={() => dispatch(changeMode("random"))}
-            checked={fetchSongsMode == "random"}
-            id="fetchRandom"
+            onChange={() => dispatch(changeMode("topOfTheWeek"))}
+            checked={fetchSongsMode == "topOfTheWeek"}
+            id="topOfTheWeek"
           />
-          <label className="form-check-label" htmlFor="fetchRandom">
-            Random
+          <label className="form-check-label" htmlFor="topOfTheWeek">
+            Top week/month
           </label>
         </div>
       </div>
     </div>
-    <div>
-      {options.map(opt => <PlayListOption key={opt.code} {...opt} onClickSelection={() => changePlaylist(opt.title, opt.code)} />)}
+    <div className="playlist-selection-wrapper">
+      {options.map(opt => <PlayListOption key={opt.code} {...opt} onClickSelection={() => changePlaylist(opt.title, opt.code, fetchSongsMode)} />)}
     </div>
   </div>
 }
@@ -153,25 +153,25 @@ const options = [
     code: 'dreampop'
   },
   {
-    title: '/r/shareyourmusic',
-    subtitle: 'The purpose of the subreddit is to be able to get your music out to the public',
-    code: 'shareyourmusic'
-  },
-  {
-    title: '/r/witch_house/',
+    title: '/r/witch_house',
     subtitle: 'WΣ CØMΣ FRØM Δ ÐARK ΔBYSS, WΣ ΣNÐ ‡N Δ ÐARK ΔBYSS, ΔNÐ WΣ CΔLL THΣ ŁUM‡NØUS ‡NTΣRVAL Ł‡FΣ',
     code: 'witch_house'
   },
   {
-    title: '/r/synthwave/',
+    title: '/r/synthwave',
     subtitle: 'Electronic music of the Cold War continued',
     code: 'synthwave'
   },
   {
-    title: '/r/metal',
-    subtitle: 'Metal',
-    code: 'metal'
+    title: '/r/mealtimevideos',
+    subtitle: 'You know when you sit down for a meal in front of the computer and you just need something new to watch for a bit while you eat?',
+    code: 'mealtimevideos'
   },
+  {
+    title: '/r/youtubehaiku',
+    subtitle: 'Poetic and/or funny YouTube videos under 30 seconds. ',
+    code: 'youtubehaiku'
+  }
 ]
 
 export default PlaylistSelectorWrapper
